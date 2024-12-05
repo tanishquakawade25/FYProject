@@ -3,6 +3,12 @@ import streamlit as st
 from apps import login, home
 from data_file import indiavix_data_fetcher
 
+st.set_page_config(
+    page_title="Stock Market",
+    page_icon="chart_with_upwards_trend",
+    )
+
+
 # Main function to route the app
 def main():
     # Initialize session state

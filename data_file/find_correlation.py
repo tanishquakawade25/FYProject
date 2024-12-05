@@ -191,6 +191,16 @@ def app():
         if view_option == "Correlation Matrix":
             st.write("\nDistance Correlation Matrix:")
             st.write(correlation_matrix)
+            
+            # Allow user to download the stock data as a CSV file
+            csv_data = correlation_matrix.to_csv(index=True)  # Include the index (timestamp) in the CSV
+            st.download_button(
+                label="Download Correlation Matrix as CSV",
+                data=csv_data,
+                file_name="Correlation Matrix.csv",
+                mime="text/csv",
+                icon="📄",
+            )
 
         elif view_option == "Heatmap":
             # Clean the correlation matrix for plotting
@@ -202,6 +212,16 @@ def app():
                 fig, ax = plt.subplots(figsize=(8, 8))  # Adjusted figure size for better display
                 sns.heatmap(correlation_matrix_clean, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, ax=ax)
                 st.pyplot(fig)
+                
+                # Allow user to download the stock data as a CSV file
+                csv_data = fig.to_csv(index=True)  # Include the index (timestamp) in the CSV
+                st.download_button(
+                    label="Download Heatmap as CSV",
+                    data=csv_data,
+                    file_name="Heatmap.csv",
+                    mime="text/csv",
+                    icon="📄",
+                )
 
         elif view_option == "Trend Visualization":
             st.write("### Trend of All Stocks and India VIX Index")
@@ -251,6 +271,16 @@ def app():
 
                 # Display the plot
                 st.pyplot(fig)
+                
+                # Allow user to download the stock data as a CSV file
+                csv_data = fig.to_csv(index=True)  # Include the index (timestamp) in the CSV
+                st.download_button(
+                    label="Download Graph as CSV",
+                    data=csv_data,
+                    file_name="Graph.csv",
+                    mime="text/csv",
+                    icon="📄",
+                )
 
     else:
         st.write("No valid data available for correlation calculation.")
