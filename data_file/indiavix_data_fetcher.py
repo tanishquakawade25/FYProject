@@ -56,6 +56,7 @@ def display_vix_data():
             data=csv_data,
             file_name="india_vix_data.csv",
             mime="text/csv",
+            icon="📄",
         )
 
     else:

@@ -209,19 +209,25 @@ def app():
             if correlation_matrix_clean.empty:
                 st.write("No valid correlation data available to display.")
             else:
-                fig, ax = plt.subplots(figsize=(8, 8))  # Adjusted figure size for better display
+                fig, ax = plt.subplots(figsize=(5, 5))  # Adjusted figure size for better display
                 sns.heatmap(correlation_matrix_clean, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, ax=ax)
                 st.pyplot(fig)
                 
-                # Allow user to download the stock data as a CSV file
-                csv_data = fig.to_csv(index=True)  # Include the index (timestamp) in the CSV
-                st.download_button(
-                    label="Download Heatmap as CSV",
-                    data=csv_data,
-                    file_name="Heatmap.csv",
-                    mime="text/csv",
-                    icon="📄",
-                )
+                # Save the heatmap as an image (ensure the directory exists)
+                img_path = "heatmap.png"  # You can specify an absolute path here if needed
+
+                # Save the figure
+                fig.savefig(img_path)
+                
+                # Allow users to download the heatmap image
+                with open("heatmap.png", "rb") as img_file:
+                    btn = st.download_button(
+                        label="Download Heatmap Image",
+                        data=img_file,
+                        file_name="heatmap.png",
+                        mime="image/png",
+                        icon="📥",
+                    )
 
         elif view_option == "Trend Visualization":
             st.write("### Trend of All Stocks and India VIX Index")
@@ -272,15 +278,21 @@ def app():
                 # Display the plot
                 st.pyplot(fig)
                 
-                # Allow user to download the stock data as a CSV file
-                csv_data = fig.to_csv(index=True)  # Include the index (timestamp) in the CSV
-                st.download_button(
-                    label="Download Graph as CSV",
-                    data=csv_data,
-                    file_name="Graph.csv",
-                    mime="text/csv",
-                    icon="📄",
-                )
+                # Save the heatmap as an image (ensure the directory exists)
+                img_path = "stock_vix_plot.png"  # You can specify an absolute path here if needed
+
+                # Save the figure
+                fig.savefig(img_path)
+                
+                # Allow users to download the heatmap image
+                with open("stock_vix_plot.png", "rb") as img_file:
+                    btn = st.download_button(
+                        label="Download Stock VIX Plot Image",
+                        data=img_file,
+                        file_name="heatmap.png",
+                        mime="image/png",
+                        icon="📥",
+                    )
 
     else:
         st.write("No valid data available for correlation calculation.")
