@@ -12,6 +12,7 @@ import streamlit as st
 def app():
     if st.session_state.get("logged_in", False):
         st.title("WelCome")
+        st.title("WelCome")
 
         # Sidebar navigation
         st.sidebar.subheader("Navigation")
@@ -57,6 +58,16 @@ def app():
             
     else:
         st.warning("Please login first!")
+
+
+
+
+
+
+
+
+
+
 
 
 
