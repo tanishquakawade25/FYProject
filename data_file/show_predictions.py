@@ -381,6 +381,16 @@ def run_random_forest_model():
                 future_df = pd.DataFrame({'Date': future_dates, f'Predicted_{ticker}_Close': future_predictions})
                 st.write(f"\nPredicted {ticker} Close Prices for the Next 5 Days:")
                 st.write(future_df)
+                
+            # Allow user to download the stock data as a CSV file
+            csv_data = future_df.to_csv(index=True)  # Include the index (timestamp) in the CSV
+            st.download_button(
+                label="Download Predicted Values as CSV",
+                data=csv_data,
+                file_name="Predicted Values.csv",
+                mime="text/csv",
+                icon="⬇️",
+            )
 
         elif prediction_mode == "Graphical":
             # Show predictions as a graph
@@ -400,93 +410,25 @@ def run_random_forest_model():
                 st.pyplot(plt)
 
         # Display evaluation metrics
-        st.write(f"Metrics for {ticker}:")
+        st.write(f"Evaluation Metrics :")
         st.write(f"Mean Squared Error (MSE): {mse:.2f}")
         st.write(f"Root Mean Squared Error (RMSE): {rmse:.2f}")
         st.write(f"R-squared Score (R²): {r2_score_value:.2f}")
-        
-        
-        
-        
-        
-# # Function for Prophet Model
-# def run_prophet_model():
-#     st.subheader("Stock Price Predictions using Prophet Model")
-
-#     # Sidebar for selecting stocks manually
-#     st.sidebar.header("Add Stocks to Analyze")
-#     manual_stocks = st.sidebar.text_input(
-#         "Enter Stock Tickers (comma-separated, e.g., RELIANCE.NS,TCS.NS):",
-#         ""
-#     )
-
-#     # Date range input
-#     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-07-18"))
-#     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-11-10"))
-
-#     # Process the user input to extract stock tickers
-#     stocks_to_analyze = [ticker.strip() for ticker in manual_stocks.split(",") if ticker.strip()]
-
-#     if not stocks_to_analyze:
-#         st.warning("Please enter at least one stock ticker.")
-#         st.stop()
-    
-#     # Fetch stock data for valid tickers
-#     stock_data = {}
-#     for ticker in stocks_to_analyze:
-#         try:
-#             data = yf.download(ticker, start=start_date, end=end_date, interval="1d")
-#             if not data.empty:
-#                 stock_data[ticker] = data
-#             else:
-#                 st.warning(f"No data found for ticker: {ticker}")
-#         except Exception as e:
-#             st.error(f"Error fetching data for {ticker}: {e}")
-
-#     if not stock_data:
-#         st.warning("No valid data fetched for the provided tickers.")
-#         st.stop()
-
-#     # Prophet model for each stock
-#     for ticker, data in stock_data.items():
-#         st.write(f"Predictions for {ticker}")
-
-#         # Prepare data for Prophet
-#         df = data[['Close']].reset_index()
-#         df.rename(columns={"Date": "ds", "Close": "y"}, inplace=True)
-
-#         # Initialize and fit the Prophet model
-#         model = Prophet()
-#         model.fit(df)
-        
-#         # Future predictions
-#         future = model.make_future_dataframe(periods=30)  # Forecast for 30 days
-#         forecast = model.predict(future)
-
-#         # Plot predictions
-#         fig1 = model.plot(forecast)
-#         st.pyplot(fig1)
-
-#         # Show forecast data
-#         st.write(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
-        
         
         
 # Main Streamlit app
 def app():
     view_option = st.radio(
         "Choose a Model:",
-        ("Random Forest Model", "Prophet Model"),
+        ("Random Forest Model", ),
         horizontal=True  # Makes the radio buttons appear side by side
     )
 
     if view_option == "Random Forest Model":
         run_random_forest_model()
 
-    elif view_option == "Prophet Model":
-        # run_prophet_model()
-        st.write("prophet")
+    # elif view_option == "Prophet Model":
+    #     # run_prophet_model()
+    #     st.write("prophet")
         
         
-# if __name__ == "__main__":
-#     app()

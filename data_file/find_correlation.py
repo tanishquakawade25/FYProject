@@ -5,13 +5,14 @@ import seaborn as sns
 import yfinance as yf
 import pandas_market_calendars as mcal
 from datetime import timedelta
+import streamlit as st
+import matplotlib.dates as mdates
 
 def app():
     """
     Main function that performs the correlation analysis and visualization.
     This function should be called from home.py.
     """
-    import streamlit as st
 
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")
@@ -199,7 +200,7 @@ def app():
                 data=csv_data,
                 file_name="Correlation Matrix.csv",
                 mime="text/csv",
-                icon="📄",
+                icon="⬇️",
             )
 
         elif view_option == "Heatmap":
@@ -238,7 +239,6 @@ def app():
             if trend_data.empty:
                 st.write("No data available for trend visualization.")
             else:
-                import matplotlib.dates as mdates
 
                 # Separate India VIX data and stock data
                 vix_data = trend_data["India VIX Index"]
@@ -289,7 +289,7 @@ def app():
                     btn = st.download_button(
                         label="Download Stock VIX Plot Image",
                         data=img_file,
-                        file_name="heatmap.png",
+                        file_name="stock_vix_plot.png",
                         mime="image/png",
                         icon="📥",
                     )

@@ -30,14 +30,14 @@ def display_vix_data():
 
         # Display key metrics
         col1, col2, col3, col4, col5 = st.columns(5)
-        col1.metric("Current Price", f"{current_price:.2f}")
+        col1.metric("📍Current Price", f"{current_price:.2f}")
         col2.metric("Open Price", f"{open_price:.2f}")
         col3.metric("High Price", f"{high_price:.2f}")
         col4.metric("Low Price", f"{low_price:.2f}")
         col5.metric("Previous Close", f"{previous_close:.2f}")
 
         # Plot real-time graph using Plotly
-        st.subheader("Live India VIX Trend")
+        st.subheader(" 🟢 Live India VIX Trend")
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name='Close Price', line=dict(color='red')))
         fig.update_layout(

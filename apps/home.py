@@ -3,11 +3,6 @@ sys.path.append('C:/Users/hp/Desktop/FYProject')
 from data_file import indiavix_data_fetcher, data_fetcher, find_correlation, show_predictions
 import streamlit as st
 
-# import importlib
-# import data_file.data_fetcher
-# importlib.reload(data_file.data_fetcher)
-# print("data_fetcher loaded successfully!")
-
 
 def app():
     if st.session_state.get("logged_in", False):
