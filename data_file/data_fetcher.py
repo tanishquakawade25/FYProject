@@ -4,8 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+@st.cache_resource
 def stock_data():
-    st.title("📶 Analysis")
+    st.subheader("📶 Analysis")
 
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")
@@ -135,3 +136,4 @@ def stock_data():
 
 def app():
     stock_data()
+    
