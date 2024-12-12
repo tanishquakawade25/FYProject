@@ -14,6 +14,8 @@ def app():
     This function should be called from home.py.
     """
 
+    st.write("Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
+
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")
     manual_stocks = st.sidebar.text_input(
@@ -124,7 +126,7 @@ def app():
             merged_data_clean = merged_data_clean.drop(columns=['index'])
             
             st.write("\nCleaned Data Preview:")
-            st.write(merged_data_clean.head())
+            st.dataframe(merged_data_clean.head(), use_container_width=tru)
 
         except Exception as e:
             st.write(f"Error merging data: {e}")
@@ -191,7 +193,7 @@ def app():
         # Logic to display based on the selected option
         if view_option == "Correlation Matrix":
             st.write("\nDistance Correlation Matrix:")
-            st.write(correlation_matrix)
+            st.dataframe(correlation_matrix, use_container_width=True)
             
             # Allow user to download the stock data as a CSV file
             csv_data = correlation_matrix.to_csv(index=True)  # Include the index (timestamp) in the CSV

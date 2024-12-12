@@ -184,7 +184,7 @@ def run_random_forest_model(stocks_input, start_date, end_date):
             future_df = pd.DataFrame({'Date': future_dates, f'Predicted_{ticker}_Close': future_predictions})
 
             st.write(f"\nPredicted {ticker} Close Prices for the Next 5 Days:")
-            st.write(future_df)
+            st.dataframe(future_df, use_container_width=True)
 
             # Allow user to download the stock data as a CSV file
             csv_data = future_df.to_csv(index=True)  # Include the index (timestamp) in the CSV

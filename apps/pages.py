@@ -1,4 +1,11 @@
-from config.firebase_setup import get_db
 import streamlit as st
-db = get_db()
-st.write(db)
+from streamlit_modal import Modal
+
+
+modal = Modal(key="Demo Key",title="test")
+for col in st.columns(8):
+            with col:
+                open_modal = st.button(label='tttt')
+                if open_modal:
+                    with modal.container():
+                        st.markdown('testtesttesttesttesttesttesttest')
