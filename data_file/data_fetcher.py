@@ -4,9 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-def stock_data():
+def app():
     st.subheader("📶 Analysis")
-    st.write("Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
+    st.write("🛈 Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
 
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")
@@ -132,6 +132,4 @@ def stock_data():
         else:
             st.error("No valid data available to display.")
 
-    def app():
-        stock_data()
     

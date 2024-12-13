@@ -1,3 +1,6 @@
+import sys
+sys.path.append("c:/Users/hp/Desktop/FYProject/main.py")
+
 import streamlit as st
 from data_file import data_fetcher, find_correlation, indiavix_data_fetcher, show_predictions
 
@@ -6,22 +9,21 @@ def app():
         st.title("Welcome to the Stock Market App")
 
         # Sidebar navigation
-        st.sidebar.subheader("Navigation")
+        st.sidebar.subheader("🌐Navigation")
                 
-        if st.sidebar.button("Home"):
+        if st.sidebar.button("Home", icon="🏠"):
             st.session_state.active_page = "home"
         
-        if st.sidebar.button("Stock Analysis"):
+        if st.sidebar.button("Stock Analysis", icon="📊"):
             # Set session state for stock analysis
             st.session_state.active_page = "stock_analysis"
-            st.write("Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
+            
 
-
-        if st.sidebar.button("Find correlation"):
+        if st.sidebar.button("Find correlation", icon="🔗"):
             # Set session state for stock analysis
             st.session_state.active_page = "find_correlation"
         
-        if st.sidebar.button("Show Predictions"):
+        if st.sidebar.button("Show Predictions", icon="🔮"):
             # Set session state for stock analysis
             st.session_state.active_page = "show_predictions"
         
@@ -46,7 +48,7 @@ def app():
         elif st.session_state.active_page == "show_predictions":    
             show_predictions.app()
         
-        if st.sidebar.button("Logout"):
+        if st.sidebar.button("Logout", icon="➡️"):
             st.session_state.logged_in = False
             st.rerun()  # Log out and reload to the login page
                     

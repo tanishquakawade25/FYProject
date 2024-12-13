@@ -8,14 +8,13 @@ from datetime import timedelta
 import streamlit as st
 import matplotlib.dates as mdates
 
+
 def app():
     """
     Main function that performs the correlation analysis and visualization.
     This function should be called from home.py.
     """
-
-    st.write("Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
-
+    st.write("🛈 Analyzes stock trends and the India VIX index, uncovering correlations to reveal how stocks relate to market volatility. Gain actionable insights with dynamic charts, interactive heatmaps, and exportable data—empowering you to make informed decisions! 📊🚀")
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")
     manual_stocks = st.sidebar.text_input(
@@ -126,7 +125,7 @@ def app():
             merged_data_clean = merged_data_clean.drop(columns=['index'])
             
             st.write("\nCleaned Data Preview:")
-            st.dataframe(merged_data_clean.head(), use_container_width=tru)
+            st.dataframe(merged_data_clean.head(), use_container_width=True)
 
         except Exception as e:
             st.write(f"Error merging data: {e}")
