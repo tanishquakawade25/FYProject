@@ -14,6 +14,7 @@ def app():
     Main function that performs the correlation analysis and visualization.
     This function should be called from home.py.
     """
+    st.subheader("Decoding Stock Trends: Correlation with India VIX 📊")
     st.write("🛈 Analyzes stock trends and the India VIX index, uncovering correlations to reveal how stocks relate to market volatility. Gain actionable insights with dynamic charts, interactive heatmaps, and exportable data—empowering you to make informed decisions! 📊🚀")
     # Sidebar input for stock tickers and date range
     st.sidebar.header("Add Stocks to Analyze")

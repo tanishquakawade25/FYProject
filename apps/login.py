@@ -27,7 +27,6 @@ def app():
                 # Note: Firebase Auth automatically handles password verification when calling `get_user_by_email`
 
                 # If successful, login the user
-                st.write("")
                 st.success(f"✅ Login successful! Welcome, {email}!")
                 st.session_state.logged_in = True
                 # Redirect or show the home page here after successful login

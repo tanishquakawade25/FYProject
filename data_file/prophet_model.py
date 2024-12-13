@@ -7,6 +7,25 @@ import numpy as np
 from sklearn.model_selection import ParameterGrid
 import streamlit as st
 
+def validate_ticker(ticker):
+    """
+    Validates if the stock ticker exists and can be fetched using yfinance.
+    
+    Parameters:
+    - ticker (str): Stock ticker symbol (e.g., 'AAPL').
+    
+    Returns:
+    - bool: True if ticker is valid, False otherwise.
+    """
+    try:
+        stock = yf.Ticker(ticker)
+        data = stock.history(period="1d")  # Attempt to fetch a single day's data to check validity
+        if data.empty:
+            return False
+        return True
+    except Exception:
+        return False
+
 def run_prophet_model(manual_stocks, start_date, end_date, prediction_mode="Tabular"):
     """
     Runs a Prophet model for stock price prediction using the specified stock ticker and date range.
@@ -18,6 +37,23 @@ def run_prophet_model(manual_stocks, start_date, end_date, prediction_mode="Tabu
     - prediction_mode (str): Display mode for predictions ('Tabular' or 'Visual').
     """
     st.subheader("Stock Price Predictions using Prophet Model")
+
+    # Check if the ticker is empty
+    if not manual_stocks:
+        st.warning("No valid tickers found. Please check your input or data availability.")
+        return
+
+    # Validate stock ticker
+    if not validate_ticker(manual_stocks):
+        st.error(f"Invalid stock ticker: {manual_stocks}. Please enter a valid ticker.")
+        return
+
+    prediction_mode = st.radio(
+        "Choose Visualisation Mode : ",
+        ("Tabular", "Graphical"),
+        horizontal=True
+    )
+
     # Fetch stock data
     @st.cache_data
     def fetch_hourly_data_with_period(ticker, start_date, end_date):
@@ -29,8 +65,8 @@ def run_prophet_model(manual_stocks, start_date, end_date, prediction_mode="Tabu
             try:
                 stock = yf.Ticker(ticker)
                 data = stock.history(interval='1h', period="1d", 
-                start=current_start.date(), 
-                end=(current_start + pd.Timedelta(days=1)).date())
+                                     start=current_start.date(), 
+                                     end=(current_start + pd.Timedelta(days=1)).date())
                 if not data.empty:
                     all_data.append(data)
             except Exception as e:
@@ -45,8 +81,12 @@ def run_prophet_model(manual_stocks, start_date, end_date, prediction_mode="Tabu
         else:
             raise ValueError("No data fetched. Verify the ticker symbol or date range.")
 
-    stock_data = fetch_hourly_data_with_period(manual_stocks, start_date, end_date)
-    vix_data = fetch_hourly_data_with_period('^INDIAVIX', start_date, end_date)
+    try:
+        stock_data = fetch_hourly_data_with_period(manual_stocks, start_date, end_date)
+        vix_data = fetch_hourly_data_with_period('^INDIAVIX', start_date, end_date)
+    except ValueError as e:
+        st.error(f"Error: {e}")
+        return
 
     # Process and merge data
     stock_data['Date'] = stock_data.index.date
@@ -117,31 +157,88 @@ def run_prophet_model(manual_stocks, start_date, end_date, prediction_mode="Tabu
     r2 = r2_score(y_true, y_pred)
     mape = mean_absolute_percentage_error(y_true, y_pred)
 
-    # Display results
+    # Prepare future dataframe for visualization
+    future_df = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].rename(columns={
+        'ds': 'Date', 'yhat': 'Predicted Close', 'yhat_lower': 'Lower Bound', 'yhat_upper': 'Upper Bound'
+    })
+
+    # Visualization Mode
     if prediction_mode == "Tabular":
-        st.write(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
-    elif prediction_mode == "Visual":
-        fig1 = best_model.plot(forecast)
-        st.pyplot(fig1)
+        # Display tabular data
+        st.subheader("Tabular Data")
+        st.dataframe(future_df.tail(), use_container_width=True)
 
-        fig2 = best_model.plot_components(forecast)
-        st.pyplot(fig2)
+        # Save tabular data to CSV
+        csv_data = future_df.to_csv(index=False)
+        st.download_button(
+            label="Download Predicted Data as CSV",
+            data=csv_data,
+            file_name=f"{manual_stocks}_predicted_data.csv",
+            mime="text/csv",
+            icon="⬇️",
+        )
 
-    # Enhanced plotting
-    fig, ax1 = plt.subplots(figsize=(14, 7))
-    ax1.plot(df_prophet['ds'], df_prophet['y'], label="Actual Prices", color='blue', linewidth=2)
-    ax1.plot(forecast['ds'], forecast['yhat'], label="Forecasted Prices", color='green', linestyle='--')
-    ax1.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='green', alpha=0.2, label="Confidence Interval")
-    ax1.legend(loc='upper left')
-    ax1.grid(True)
-    st.pyplot(fig)
+    elif prediction_mode == "Graphical":
+        # Plot historical and predicted data
+        fig, ax1 = plt.subplots(figsize=(14, 7))
 
-# Display evaluation metrics
+        # Plot historical data
+        ax1.plot(
+            df_prophet['ds'], 
+            df_prophet['y'], 
+            label="Historical Prices", 
+            color="blue", 
+            linewidth=2
+        )
+
+        # Plot predicted data
+        ax1.plot(
+            forecast['ds'], 
+            forecast['yhat'], 
+            label="Predicted Prices", 
+            color="green", 
+            linestyle="--"
+        )
+
+        # Add confidence interval shading
+        ax1.fill_between(
+            forecast['ds'], 
+            forecast['yhat_lower'], 
+            forecast['yhat_upper'], 
+            color="green", 
+            alpha=0.2, 
+            label="Confidence Interval"
+        )
+
+        # Set plot titles and labels
+        ax1.set_title(f"{manual_stocks} Close Price: Historical and Forecast", fontsize=16, fontweight='bold')
+        ax1.set_xlabel("Date", fontsize=14)
+        ax1.set_ylabel("Price", fontsize=14)
+
+        # Customize grid and legend
+        ax1.legend(fontsize=12, loc="upper left")
+        ax1.grid(visible=True, which='major', linestyle='--', linewidth=0.5, alpha=0.7)
+
+        # Display the plot
+        st.pyplot(fig)
+
+        # Save the plot to an in-memory file
+        image_path = f"{manual_stocks}_predicted_plot.png"
+        fig.savefig(image_path, format="png")
+
+        # Allow user to download the plot as an image
+        with open(image_path, "rb") as img_file:
+            st.download_button(
+                label=f"Download {manual_stocks} Plot as Image",
+                data=img_file,
+                file_name=image_path,
+                mime="image/png",
+                icon="📥",
+            )
+
+    # Display evaluation metrics
     st.write("\nModel Evaluation (Overall):")
     st.write(f"Mean Squared Error (MSE): {mse:.2f}")
     st.write(f"Root Mean Squared Error (RMSE): {rmse:.2f}")
     st.write(f"R-squared Score (R²): {r2:.2f}")
     st.write(f"Mean Absolute Percentage Error (MAPE): {mape:.2%}")
-
-# if st.button("Run Model"):
-#     run_prophet_model(manual_stocks, start_date, end_date, prediction_mode)

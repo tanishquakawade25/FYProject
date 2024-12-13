@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 def app():
-    st.subheader("📶 Analysis")
+    st.subheader("📶Stock Data Analysis")
     st.write("🛈 Explore stock and VIX data in interactive tables or insightful graphs, and easily download the data or chart for further analysis.")
 
     # Sidebar input for stock tickers and date range

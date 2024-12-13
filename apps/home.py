@@ -9,21 +9,21 @@ def app():
         st.title("Welcome to the Stock Market App")
 
         # Sidebar navigation
-        st.sidebar.subheader("🌐Navigation")
+        st.sidebar.subheader("🌐 Navigation")
                 
-        if st.sidebar.button("Home", icon="🏠"):
+        if st.sidebar.button("Home", icon="🏠", use_container_width=True):
             st.session_state.active_page = "home"
         
-        if st.sidebar.button("Stock Analysis", icon="📊"):
+        if st.sidebar.button("Stock Analysis", icon="📊", use_container_width=True):
             # Set session state for stock analysis
             st.session_state.active_page = "stock_analysis"
             
 
-        if st.sidebar.button("Find correlation", icon="🔗"):
+        if st.sidebar.button("Find correlation", icon="🔗", use_container_width=True):
             # Set session state for stock analysis
             st.session_state.active_page = "find_correlation"
         
-        if st.sidebar.button("Show Predictions", icon="🔮"):
+        if st.sidebar.button("Show Predictions", icon="🔮", use_container_width=True):
             # Set session state for stock analysis
             st.session_state.active_page = "show_predictions"
         

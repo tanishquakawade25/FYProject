@@ -41,7 +41,7 @@ def run_random_forest_model(stocks_input, start_date, end_date):
     st.subheader("Stock Price Predictions using Random Forest Regression Model")
 
     # Two more options to choose from: Tabular or Graphical
-    st.subheader("Choose Visualisation Mode : ")
+    st.write("Choose Visualisation Mode : ")
     prediction_mode = st.radio(
         "",
         ("Tabular", "Graphical"),
