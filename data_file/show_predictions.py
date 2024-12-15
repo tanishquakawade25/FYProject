@@ -10,7 +10,7 @@ def app():
     
     # Collect user input for tickers and date range
     manual_stocks = st.sidebar.text_input(
-        "Enter Stock Tickers (comma-separated, e.g., RELIANCE.NS,TCS.NS):",
+        "Enter Stock Tickers (e.g., RELIANCE.NS,TCS.NS):",
         ""
     )
     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-11-25"))
